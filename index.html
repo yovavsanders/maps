@@ -414,14 +414,27 @@
 				for (i = 0; i < features.length; i++)
 				{
 					var feat = features[i].geometry.coordinates;
+					//console.log("feat");
+					//console.log(feat);
 					for (p = 0; p < feat.length; p++)
 					{
 						part = feat[p];
+						//console.log("part");
+						//console.log(part);
 						for (c = 0; c < part.length; c++)
 						{
 							coordinates = part[c];
-							x_list.push(coordinates[0]);
-							y_list.push(coordinates[1]);		
+							//console.log("coordinates");
+							//console.log(coordinates);
+							if (coordinates[0] > 0 && coordinates[1] > 0)
+							{
+								x_list.push(coordinates[0]);
+								y_list.push(coordinates[1]);
+							}
+							else
+							{
+								console.log("null xy");
+							}							
 						}
 					}
 				}
@@ -486,12 +499,18 @@
 				if (features[i].properties.FNAME == x && features[i].properties.SETL_NAME == document.getElementById("select").value )
 				{
 					var feat = features[i].geometry.coordinates;
+					//console.log("feat");
+					//console.log(feat);
 					for (p = 0; p < feat.length; p++)
 					{
 						part = feat[p];
+						//console.log("part");
+						//console.log(part);
 						for (c = 0; c < part.length; c++)
 						{
 							coordinates = part[c];
+							//console.log("coordinates");
+							//console.log(coordinates);
 							x_list.push(coordinates[0]);
 							y_list.push(coordinates[1]);		
 						}
