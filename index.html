@@ -4,7 +4,6 @@
     <meta charset='utf-8' />
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
-	<script src='./NEIGHBORHOODs_Area_0.js'></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
     <style>
@@ -477,36 +476,39 @@
 		var selected_setl = document.getElementById("select").value;
 		
 		console.log(selected_setl);
-		var features = NEIGHBORHOODs_Area.features.filter(function(item) {
-			return item.properties.SETL_NAME.indexOf(selected_setl) > -1;
-		});
-		for (i = 0; i < features.length; i++)
-		{
-			if (features[i].properties.FNAME == x && features[i].properties.SETL_NAME == document.getElementById("select").value )
+		$.getJSON('./NEIGHBORHOODs_Area.geojson', function(features1) {
+			var features = features1.features.filter(function(item) {
+				return item.properties.SETL_NAME.indexOf(selected_setl) > -1;
+			});
+			//var features = NEIGHBORHOODs_Area.features
+			for (i = 0; i < features.length; i++)
 			{
-				var feat = features[i].geometry.coordinates;
-				for (p = 0; p < feat.length; p++)
+				if (features[i].properties.FNAME == x && features[i].properties.SETL_NAME == document.getElementById("select").value )
 				{
-					part = feat[p];
-					for (c = 0; c < part.length; c++)
+					var feat = features[i].geometry.coordinates;
+					for (p = 0; p < feat.length; p++)
 					{
-						coordinates = part[c];
-						x_list.push(coordinates[0]);
-						y_list.push(coordinates[1]);		
-					}
-				}		
+						part = feat[p];
+						for (c = 0; c < part.length; c++)
+						{
+							coordinates = part[c];
+							x_list.push(coordinates[0]);
+							y_list.push(coordinates[1]);		
+						}
+					}		
+				}
 			}
-		}
-		max_x = Math.max.apply(null, x_list);
-		max_y = Math.max.apply(null, y_list);
-		min_x = Math.min.apply(null, x_list);
-		min_y = Math.min.apply(null, y_list);
-		
-		var bbox = [[max_x, max_y], [min_x, min_y]];
-		map.fitBounds(bbox, 
-		{
-		  padding: {top: 10, bottom:25, left: 15, right: 5}
-		});		
+			max_x = Math.max.apply(null, x_list);
+			max_y = Math.max.apply(null, y_list);
+			min_x = Math.min.apply(null, x_list);
+			min_y = Math.min.apply(null, y_list);
+			
+			var bbox = [[max_x, max_y], [min_x, min_y]];
+			map.fitBounds(bbox, 
+			{
+			  padding: {top: 10, bottom:25, left: 15, right: 5}
+			});		
+		});
 	}
 	
 	
