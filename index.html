@@ -102,7 +102,7 @@
   	var slider = document.getElementById("myRange");
 	var output = document.getElementById("demo");
 	var features;
-  
+	var the_geojson = '{"type": "FeatureCollection","features": []}";';
   
     mapboxgl.accessToken = 'pk.eyJ1IjoieW92YXZzYW5kZXJzIiwiYSI6ImNqcGF4c2lveDJpNWszcXJ3a2wyNDBxNTcifQ.0tGpMLNldd3iKdaJy0qV8Q';
     var map = new mapboxgl.Map({
@@ -114,97 +114,21 @@
 	
 	map.on('style.load', function() {
 		
-			  map.addSource('2018', {
+			map.addSource('deals_geojson', {
 			type: 'geojson',
 			data: './Deals_2018.geojson'
-		  });
-		  
-		  map.addSource('2017', {
-			type: 'geojson',
-			data: './Deals_2017.geojson'
-		  });
-		  
-		   map.addSource('2016', {
-			type: 'geojson',
-			data: './Deals_2016.geojson'
-		  });
-		  
-		  map.addSource('2015', {
-			type: 'geojson',
-			data: './Deals_2015.geojson'
-		  });
-		  
-		  map.addSource('2014', {
-			type: 'geojson',
-			data: './Deals_2014.geojson'
-		  });
-		  
-		  map.addSource('2013', {
-			type: 'geojson',
-			data: './Deals_2013.geojson'
-		  });
-		  
-		  map.addSource('2012', {
-			type: 'geojson',
-			data: './Deals_2012.geojson'
-		  });
-		  
-		  map.addSource('2011', {
-			type: 'geojson',
-			data: './Deals_2011.geojson'
-		  });
-		  
-		  map.addSource('2010', {
-			type: 'geojson',
-			data: './Deals_2010.geojson'
-		  });
-		  
-		  map.addSource('2009', {
-			type: 'geojson',
-			data: './Deals_2009.geojson'
-		  });
-		  map.addSource('2008', {
-			type: 'geojson',
-			data: './Deals_2008.geojson'
-		  });
-		  map.addSource('2007', {
-			type: 'geojson',
-			data: './Deals_2007.geojson'
-		  });
-		  map.addSource('2006', {
-			type: 'geojson',
-			data: './Deals_2006.geojson'
-		  });
-		  
-		  map.addSource('NEIGHBORHOODs_Area', {
+			});
+
+			map.addSource('NEIGHBORHOODs_Area', {
 			type: 'geojson',
 			data: './NEIGHBORHOODs_Area.geojson'
-		  });
-		  
-		  
+			});
 
-		
-		addLayer("2018");
+			map.addSource('NEIGHBORHOODs_Area', {
+			type: 'geojson',
+			data: './NEIGHBORHOODs_Area.geojson'
+			});
 
-		
-
-	});
-	
-	
-		function addLayer(year){
-			if (map.getLayer("deals-heat")){
-				map.removeLayer("deals-heat");
-			}
-			if (map.getLayer("deals-point")){
-				map.removeLayer("deals-point");
-			}
-			if (map.getLayer("neighborhoods")){
-				map.removeLayer("neighborhoods");
-			}
-			if (map.getLayer("label")){
-				map.removeLayer("label");
-			}
-			
 			map.addLayer({
 			'id': 'neighborhoods',
 			'type': 'fill',
@@ -231,12 +155,12 @@
 			'paint': {
 				}
 			});
-			
-		  
+
+
 			map.addLayer({
 			id: 'deals-heat',
 			type: 'heatmap',
-			source: year,
+			source: 'deals_geojson',
 			maxzoom: 24,
 			paint: {
 			// increase weight as diameter breast height increases
@@ -290,7 +214,7 @@
 			  map.addLayer({
 			"id": "deals-point",
 			"type": "circle",
-			"source": year,
+			"source": 'deals_geojson',
 			"minzoom": 14,
 			"paint": {
 			// Size circle radius by earthquake magnitude and zoom level
@@ -345,7 +269,7 @@
 			.setHTML('<b>מחיר למ"ר: </b> ' + e.features[0].properties.stats_MEAN.toLocaleString() + ' ש"ח')
 			.addTo(map);
 			});
-			
+
 			// Change the cursor to a pointer when the mouse is over the states layer.
 			map.on('mouseenter', 'deals-point', function () {
 				map.getCanvas().style.cursor = 'pointer';
@@ -355,7 +279,7 @@
 			map.on('mouseleave', 'deals-point', function () {
 				map.getCanvas().style.cursor = '';
 			});
-			
+
 			$.getJSON('./NEIGHBORHOODs_Area.geojson', function(features1) {
 				features = features1.features;
 				var x = document.getElementById("select");
@@ -369,8 +293,6 @@
 						setl_names.push(features[i].properties.SETL_NAME);	
 					}
 					setl_names.sort();
-					
-
 				}
 				//console.log(setl_names);
 				for (i = 0; i < setl_names .length; i++)
@@ -381,25 +303,20 @@
 				}
 				var neigh_names = [];
 				var counter = 0;
-			});
-			//data is the JSON string
-			
-			//var features =NEIGHBORHOODs_Area.features;
-			
-			
-			
-	}
-	
-	
+			});	
+	});
+		
+
+	function addLayer(year){
+		var src = map.getSource("deals_geojson");
+		src.setData('./Deals_'+year+'.geojson');
+	}	
+
 	slider.oninput = function() {
 				output.innerHTML = this.value;
 				addLayer(this.value);
 	}
 	
-	
-	
-
-		
 
 	function myFunctionSetl() {
 		var x_list =[];
